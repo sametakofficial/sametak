@@ -3,30 +3,11 @@ name: Test
 on:
   push:
     branches:
-      - main # Sadece main branch'e push yapınca çalışır
+      - main  # Sadece main branch'e push yapınca çalışır
 
 jobs:
-  test_connection:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Depoyu Kopyala
-        uses: actions/checkout@v3
-
-      - name: SSH ile Sunucuya Bağlanma
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "Sunucuya başarıyla bağlanıldı!"
-
-  # Test Adımları
   test:
-    runs-on: ubuntu-latest
-    needs: test_connection # Bu adım, test_connection job'ının başarıyla tamamlanmasını bekler
-    if: success() # test_connection başarılıysa bu adım çalışacak
+    runs-on: ubuntu-latest  # GitHub'ın sağladığı bir Ubuntu makinesi
 
     steps:
       - name: Depoyu Kopyala
@@ -48,11 +29,9 @@ jobs:
 
       - name: Temizleme (Cleanup)
         run: docker compose down
-
   deploy:
     runs-on: ubuntu-latest
-    needs: test # Bu kısım, test job'ının başarıyla tamamlanmasını bekler
-    if: success() # Test başarılıysa deploy job'ı çalışacak
+
     steps:
       - name: Depoyu Kopyala
         uses: actions/checkout@v3

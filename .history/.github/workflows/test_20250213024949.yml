@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main  # Sadece main branch'e push yapınca çalışır
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # GitHub'ın sağladığı bir Ubuntu makinesi
+
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: Docker Build Test
+        run: docker build -t sametak-test .
+
+      - name: Docker Test Network Oluştur
+        run: docker network create proxy
+
+      - name: Docker Compose Up
+        run: docker compose up -d
+
+      - name: Servislerin Çalıştığını Kontrol Et
+        run: |
+          sleep 10  # Servislerin açılmasını bekle
+          curl -f http://localhost:8080/hls || exit 1
+
+      - name: Temizleme (Cleanup)
+        run: docker compose down
