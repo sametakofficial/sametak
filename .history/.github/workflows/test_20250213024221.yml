@@ -17,7 +17,7 @@ jobs:
         run: docker build -t sametak-test .
 
       - name: Docker Test Network Oluştur
-        run: docker network create proxy
+        run: 
 
       - name: Docker Compose Up
         run: docker compose up -d

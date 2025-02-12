@@ -3,29 +3,26 @@ name: Test
 on:
   push:
     branches:
-      - main  # Sadece main branch'e push yapınca çalışır
+      - main  # sadece main'e push yapıldığında çalışacak
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # GitHub'ın sağladığı bir Ubuntu makinesi
+    runs-on: ubuntu-latest  # GitHub'ın sağladığı Ubuntu makinesi
 
     steps:
-      - name: Depoyu Kopyala
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Docker Build Test
         run: docker build -t sametak-test .
-
       - name: Docker Test Network Oluştur
-        run: docker network create proxy
+      - name: Docker Compose Up (Test için)
+        run: docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
 
-      - name: Docker Compose Up
-        run: docker compose up -d
-
-      - name: Servislerin Çalıştığını Kontrol Et
+      - name: Test Servisleri Çalıştır
         run: |
           sleep 10  # Servislerin açılmasını bekle
           curl -f http://localhost:8080/hls || exit 1
 
-      - name: Temizleme (Cleanup)
+      - name: Cleanup
         run: docker compose down
