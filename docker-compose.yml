@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  livestream:
+    container_name: live
+    build: .
+    restart: unless-stopped
+    ports:
+      - "1935:1935"   # RTMP Yayın Portu
+      - "8080:8080"   # HLS için HTTP Servisi
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro   # Nginx config dosyası
+      - ./hls:/hls                              # HLS dosyalarının kaydedileceği klasör
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hls.rule=Host(`hls.sametak.com`)"
+      - "traefik.http.routers.hls.entrypoints=https"
+      - "traefik.http.services.hls.loadbalancer.server.port=8080"
+      - "traefik.http.routers.hls.tls.certresolver=cloudflare"  # Cloudflare TLS için
+      - "traefik.http.routers.hls.service=hls"  # HLS servisini tanımlar
+
+networks:
+  proxy:
+    external: true  # Traefik'in kullandığı ağ
