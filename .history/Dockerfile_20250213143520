@@ -72,4 +72,4 @@ COPY . .
 CMD ["npm", "run", "start"]
 
 # Portları açıyoruz
-EXPOSE 1935 3000
+EXPOSE 1935 8080 3000
