@@ -6,7 +6,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "1935:1935" 
+      - "1935:1935" # RTMP Yayın Portu açık
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro 
       - ./hls:/hls 
