@@ -12,8 +12,7 @@ services:
       - ./hls:/hls                              # HLS dosyalarının kaydedileceği klasör
     networks:
       - proxy
-    # RTMP servisine Traefik labelleri eklenmedi, sadece iç ağda çalışacak
-
+      
   nextjs:
     container_name: next-app
     build: ./next-app

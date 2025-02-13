@@ -1,0 +1,97 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_connection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: SSH Key Kur ve Bağlan
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH bağlantısı başarılı!'"
+
+      - name: Cleanup
+        run: rm -rf ~/.ssh
+
+  test:
+    runs-on: ubuntu-latest
+    needs: test_connection
+    if: success()
+
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: Docker Build Test
+        run: docker build -t sametak-test .
+
+      - name: Docker Test Network Oluştur
+        run: docker network create proxy
+
+      - name: Next Projesine İn
+        run: cd next-app
+
+      - name: Node Paketlerini İndir
+        run: npm i
+
+      - name: Yukarı Dizine Çık
+        run: npm run start
+
+      - name: Yukarı Dizine Çık
+        run: cd ..
+
+      - name: Docker Compose Up
+        run: docker compose up -d
+
+      - name: Servislerin Çalıştığını Kontrol Et
+        run: |
+          sleep 10  # Servislerin açılmasını bekle
+          curl -f http://localhost:3000 || exit 1
+
+      - name: Temizleme (Cleanup)
+        run: docker compose down
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: SSH Key Kur ve Bağlan
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: SSH Key Git Config
+        run: git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519"
+
+      - name: Sunucuya Bağlan ve Güncelle
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /docker_volumes/sametak && git pull origin main && docker compose down && docker build -t sametak-app ."
+
+      - name: Next Projesine İn
+        run: cd next-app
+
+      - name: Node Paketlerini İndir
+        run: npm i
+
+      - name: Yukarı Dizine Çık
+        run: cd ..
+
+      - name: Docker Compose Up
+        run: docker compose up -d
+
+      - name: Cleanup
+        run: rm -rf ~/.ssh

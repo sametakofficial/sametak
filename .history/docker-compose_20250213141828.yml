@@ -12,7 +12,13 @@ services:
       - ./hls:/hls                              # HLS dosyalarının kaydedileceği klasör
     networks:
       - proxy
-    # RTMP servisine Traefik labelleri eklenmedi, sadece iç ağda çalışacak
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rtmp.rule=Host(`rtmp.sametak.com`)"  # RTMP'yi açıyoruz
+      - "traefik.http.routers.rtmp.entrypoints=https"
+      - "traefik.http.services.rtmp.loadbalancer.server.port=1935"
+      - "traefik.http.routers.rtmp.tls.certresolver=cloudflare"
+      - "traefik.http.routers.rtmp.service=rtmp"
 
   nextjs:
     container_name: next-app
