@@ -34,7 +34,8 @@ jobs:
             cd /docker_volumes/sametak
             git pull origin main
             docker compose down
-            docker compose up -d --build
+            docker build -t sametak-app .
+            docker compose up -d
           EOF
 
       - name: Servisleri kontrol et

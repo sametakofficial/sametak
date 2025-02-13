@@ -6,10 +6,44 @@ on:
       - main
 
 jobs:
-  
+   #test:
+    #runs-on: ubuntu-latest
+
+    steps:
+      - name: Depoyu Kopyala
+        uses: actions/checkout@v3
+
+      - name: Docker Build Test İmajı
+        run: |
+          # Docker imajını oluştur
+          docker build -t sametak-test .
+
+      - name: Docker Test Ağı Oluştur
+        run: |
+          # Docker proxy ağı oluştur
+          docker network create proxy
+
+      - name: Docker Compose İle Servisleri Başlat
+        run: |
+          # Docker Compose ile tüm servisleri başlat
+          docker compose up -d
+
+      - name: Servislerin Çalıştığını Kontrol Et
+        run: |
+          # Servislerin doğru çalışıp çalışmadığını kontrol et
+          sleep 10  # Servislerin başlatılmasını bekle
+          sleep 10
+          curl -f http://127.0.0.1:3000 || exit 1  # Next.js servisini kontrol et
+
+      - name: Temizleme (Docker Compose Down)
+        run: |
+          # Docker Compose ile başlatılan tüm konteynerleri kapat
+          docker compose down
+
   deploy:
     runs-on: ubuntu-latest
-  
+    needs: test
+    if: success()
 
     steps:
       - name: Depoyu Kopyala
@@ -34,7 +68,8 @@ jobs:
             cd /docker_volumes/sametak
             git pull origin main
             docker compose down
-            docker compose up -d --build
+            docker build -t sametak-app .
+            docker compose up -d
           EOF
 
       - name: Servisleri kontrol et

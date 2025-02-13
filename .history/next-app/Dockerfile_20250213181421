@@ -1,0 +1,30 @@
+# Base image
+FROM node:latest AS builder
+
+# Çalışma dizinini belirle
+WORKDIR /app
+
+# package.json ve package-lock.json'ı önce kopyala (Bağımlılıkları cache'lemek için)
+COPY package.json package-lock.json ./
+
+# Önce bağımlılıkları yükle (Eğer değişiklik yoksa cache kullanılır)
+RUN npm install
+
+# Şimdi kalan tüm dosyaları kopyala
+COPY . .
+
+# Next.js build işlemi
+RUN npm run build
+
+# Production image (Daha küçük olması için)
+FROM node:18-alpine
+
+WORKDIR /app
+
+# node_modules'ü cache'den al
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+
+CMD ["npm", "run", "start"]
