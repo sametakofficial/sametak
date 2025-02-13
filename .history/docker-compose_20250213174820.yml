@@ -15,14 +15,16 @@ services:
     # RTMP servisine Traefik labelleri eklenmedi, sadece iç ağda çalışacak
 
   nextjs:
-    container_name: next-app
-    build:
-      context: ./next-app
+     build:
+      context: ./next-app  # Next.js için Dockerfile'ı bulacağı dizin
+    container_name: next_app
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Next.js portu
     volumes:
+      - ./next-app:/app
       - ./hls:/app/public/hls # HLS dosyalarını Next.js içine mount et
     working_dir: /app
+    command: "npm run start"
     networks:
       - proxy
     labels:

@@ -18,11 +18,13 @@ services:
     container_name: next-app
     build:
       context: ./next-app
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
       - ./hls:/app/public/hls # HLS dosyalarını Next.js içine mount et
     working_dir: /app
+    command: "npm run start"
     networks:
       - proxy
     labels:

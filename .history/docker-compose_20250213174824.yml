@@ -23,6 +23,7 @@ services:
     volumes:
       - ./hls:/app/public/hls # HLS dosyalarını Next.js içine mount et
     working_dir: /app
+    command: "npm run start"
     networks:
       - proxy
     labels:
