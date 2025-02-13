@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 
-const HLSPlayer = ({ src }) => {
+const VideoPlayer = ({ src }) => {
   const videoRef = useRef(null);
   const [hlsInstance, setHlsInstance] = useState(null);
   const [qualityLevels, setQualityLevels] = useState([]);
@@ -77,4 +77,4 @@ const HLSPlayer = ({ src }) => {
   );
 };
 
-export default HLSPlayer;
+export default VideoPlayer;

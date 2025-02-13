@@ -1,0 +1,14 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:272
+#EXT-X-TARGETDURATION:2
+#EXTINF:2.000,
+test_hd-272.ts
+#EXTINF:2.000,
+test_hd-273.ts
+#EXTINF:2.000,
+test_hd-274.ts
+#EXTINF:2.000,
+test_hd-275.ts
+#EXTINF:2.000,
+test_hd-276.ts

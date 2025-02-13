@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome to Live Stream!</h1>
-      <HLSPlayer src="/hls/test.m3u8" />{" "}
+      <HLSPlayer streamKey="test" />{" "}
     </div>
   );
 }

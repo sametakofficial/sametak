@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 
-const HLSPlayer = ({ src }) => {
+const HLSPlayer = ({ streamKey }) => {
   const videoRef = useRef(null);
   const [hlsInstance, setHlsInstance] = useState(null);
   const [qualityLevels, setQualityLevels] = useState([]);
@@ -13,7 +13,7 @@ const HLSPlayer = ({ src }) => {
 
     if (Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource(src);
+      hls.loadSource(streamKey);
       hls.attachMedia(videoRef.current);
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -27,13 +27,13 @@ const HLSPlayer = ({ src }) => {
 
       setHlsInstance(hls);
     } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-      videoRef.current.src = src;
+      videoRef.current.src = streamKey;
     }
 
     return () => {
       if (hlsInstance) hlsInstance.destroy();
     };
-  }, [src]);
+  }, [streamKey]);
 
   const handleQualityChange = (levelIndex) => {
     setSelectedQuality(levelIndex);
