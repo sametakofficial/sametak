@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   livestream:
@@ -6,10 +6,10 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "1935:1935" # RTMP Yayın Portu açık
+      - "1935:1935"   # RTMP Yayın Portu açık
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro # Nginx config dosyası
-      - ./hls:/hls # HLS dosyalarının kaydedileceği klasör
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro   # Nginx config dosyası
+      - ./hls:/hls                              # HLS dosyalarının kaydedileceği klasör
     networks:
       - proxy
     # RTMP servisine Traefik labelleri eklenmedi, sadece iç ağda çalışacak
@@ -22,8 +22,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./next-app:/app:delegated
-      - ./hls:/app/public/hls # HLS dosyalarını Next.js içine mount et
+      - ./next-app:/app:dele
+      - ./hls:/app/public/hls  # HLS dosyalarını Next.js içine mount et
     working_dir: /app
     command: "npm run start"
     networks:
@@ -38,4 +38,4 @@ services:
 
 networks:
   proxy:
-    external: true # Traefik'in kullandığı ağ
+    external: true  # Traefik'in kullandığı ağ
