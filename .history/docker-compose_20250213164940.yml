@@ -13,17 +13,20 @@ services:
     networks:
       - proxy
     # RTMP servisine Traefik labelleri eklenmedi, sadece iç ağda çalışacak
+version: "3.8"
+
+services:
   nextjs:
     build:
-      context: ./next-app # next-app klasörüne git
-      dockerfile: Dockerfile # Dockerfile'ı kullan
+      context: ./next-app  # next-app klasörüne git
+      dockerfile: Dockerfile  # Dockerfile'ı kullan
     container_name: next-app
     ports:
-      - "3000:3000" # Next.js uygulamasına erişim
+      - "3000:3000"   # Next.js uygulamasına erişim
     volumes:
-      - ./next-app:/app # Kodları container içine mount ediyoruz
+      - ./next-app:/app   # Kodları container içine mount ediyoruz
     environment:
-      - NODE_ENV=production # Üretim ortamında çalışacağını belirtiyoruz
+      - NODE_ENV=production   # Üretim ortamında çalışacağını belirtiyoruz
     networks:
       - proxy
     labels:
@@ -36,4 +39,4 @@ services:
 
 networks:
   proxy:
-    external: true # Traefik'in kullandığı ağ
+    external: true  # Traefik'in kullandığı ağ
