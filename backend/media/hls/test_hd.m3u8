@@ -1,0 +1,14 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:334
+#EXT-X-TARGETDURATION:2
+#EXTINF:2.000,
+test_hd-334.ts
+#EXTINF:2.000,
+test_hd-335.ts
+#EXTINF:2.000,
+test_hd-336.ts
+#EXTINF:2.000,
+test_hd-337.ts
+#EXTINF:2.000,
+test_hd-338.ts

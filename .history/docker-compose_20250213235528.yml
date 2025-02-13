@@ -11,7 +11,7 @@ services:
       - "1935:1935"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/media/hls:/hls:rw
+      - ./backend/media/hls:/tmp/hls
     networks:
       - proxy
 
@@ -31,7 +31,7 @@ services:
       - "traefik.http.services.web.loadbalancer.server.port=3000"
       - "traefik.http.routers.web.tls.certresolver=cloudflare"
       - "traefik.http.routers.web.service=web"
-
+      
   backend:
     container_name: backend
     build:

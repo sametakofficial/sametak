@@ -11,16 +11,18 @@ services:
       - "1935:1935"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/media/hls:/hls:rw
+      - ./backend/media/hls:/tmp/hls
     networks:
       - proxy
 
-  frontend:
-    container_name: frontend
+  nextjs:
+    container_name: next-app
     build:
       context: ./frontend
     ports:
-      - "3001:3000"
+      - "3005:3000"
+    volumes:
+      - ./hls:/app/tmp/hls
     working_dir: /app
     networks:
       - proxy
@@ -32,14 +34,6 @@ services:
       - "traefik.http.routers.web.tls.certresolver=cloudflare"
       - "traefik.http.routers.web.service=web"
 
-  backend:
-    container_name: backend
-    build:
-      context: ./backend
-    ports:
-      - "5000:5000"  # API dışarı açıldı
-    networks:
-      - proxy
 networks:
   proxy:
     external: true # Traefik'in kullandığı ağ
