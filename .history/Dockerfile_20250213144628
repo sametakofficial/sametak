@@ -52,5 +52,5 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 # Set up config file
 COPY nginx.conf ${NGINX_CONF_PATH}
 
-EXPOSE 1935
+EXPOSE 1935 8080
 CMD ["nginx", "-g", "daemon off;"]

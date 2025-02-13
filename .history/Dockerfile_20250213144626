@@ -1,28 +1,34 @@
+# Temel imaj olarak Ubuntu 18.04 kullanmaya devam ediyoruz
 FROM ubuntu:18.04
 
-# Versions of Nginx and nginx-rtmp-module to use
+# Node.js ve gerekli diğer paketlerin kurulumu
+RUN apt-get update -y && \
+    apt-get install -y wget curl gnupg2 ca-certificates lsb-release build-essential
+
+# Node.js için gerekli repository'yi ekliyoruz
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+
+# Nginx ve RTMP modülü için yapılandırmalar
 ENV NGINX_VERSION="nginx-1.18.0"
 ENV NGINX_RTMP_MODULE_VERSION="1.2.1"
 ENV NGINX_CONF_PATH="/etc/nginx/nginx.conf"
 
-# Install dependencies
+# RTMP Modülü ve Nginx Kurulumunu Devam Ettiriyoruz
 RUN set -ex; \
     apt-get --yes update; \
     apt-get --yes install wget build-essential libaio1 openssl libpcre3-dev libssl-dev zlib1g-dev ffmpeg;
 
-# Download and decompress Nginx
 RUN mkdir -p /tmp/build/nginx && \
     cd /tmp/build/nginx && \
     wget -O ${NGINX_VERSION}.tar.gz https://nginx.org/download/${NGINX_VERSION}.tar.gz && \
     tar -zxf ${NGINX_VERSION}.tar.gz
 
-# Download and decompress RTMP module
 RUN mkdir -p /tmp/build/nginx-rtmp-module && \
     cd /tmp/build/nginx-rtmp-module && \
     wget -O nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}.tar.gz https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.tar.gz && \
     tar -zxf nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}.tar.gz
 
-# Build and install Nginx
 RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
     ./configure \
     --sbin-path=/usr/local/sbin/nginx \
@@ -45,12 +51,25 @@ RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
 # HLS için gerekli dizini oluştur
 RUN mkdir -p /hls && chmod -R 777 /hls
 
-# Forward logs to Docker
+# Logları Docker'a yönlendiriyoruz
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
-# Set up config file
+# Nginx config dosyasını kopyalıyoruz
 COPY nginx.conf ${NGINX_CONF_PATH}
 
-EXPOSE 1935
-CMD ["nginx", "-g", "daemon off;"]
+# Next.js uygulamanızın bulunduğu dizine geçiş yapıyoruz
+WORKDIR /src/app
+
+# Bağımlılıkları yüklüyoruz
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Uygulama dosyalarını kopyalıyoruz
+COPY . .
+
+# Next.js uygulamasını başlatıyoruz
+CMD ["npm", "run", "start"]
+
+# Portları açıyoruz
+EXPOSE 1935 8080 3000
