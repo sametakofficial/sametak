@@ -6,8 +6,10 @@ on:
       - main
 
 jobs:
+  
   test:
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Depoyu Kopyala
@@ -75,11 +77,6 @@ jobs:
         run: |
           # Docker Compose ile tüm servisleri başlat
           docker compose up -d
-
-      - name: Servisleri kontrol et
-        run: |
-          # Docker Compose ile tüm servisleri başlat
-          curl -f https://hls.sametak.com || exit 1  # Next.js servisini kontrol et
 
       - name: Cleanup (SSH Temizleme)
         run: rm -rf ~/.ssh
