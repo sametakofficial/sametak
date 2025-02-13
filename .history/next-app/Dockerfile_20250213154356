@@ -1,6 +1,6 @@
 # next-app/Dockerfile
 FROM node:current-alpine
-WORKDIR /app
+WORKDIR /
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
