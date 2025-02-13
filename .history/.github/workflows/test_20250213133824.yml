@@ -62,10 +62,7 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-
-      - name: SSH Key Git Config
-        run: git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519"
-        
+      - name: 
       - name: Sunucuya Bağlan ve Güncelle
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /docker_volumes/sametak && git pull origin main && docker compose down && docker build -t sametak-app . && docker compose up -d"
 
