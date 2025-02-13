@@ -3,7 +3,7 @@ name: Test
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   test_connection:
@@ -22,10 +22,11 @@ jobs:
           script: |
             echo "Sunucuya başarıyla bağlanıldı!"
 
+  
   test:
     runs-on: ubuntu-latest
-    needs: test_connection
-    if: success()
+    needs: test_connection 
+    if: success() 
 
     steps:
       - name: Depoyu Kopyala
@@ -50,8 +51,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: test
-    if: success()
+    needs: test 
+    if: success() 
     steps:
       - name: Depoyu Kopyala
         uses: actions/checkout@v3
