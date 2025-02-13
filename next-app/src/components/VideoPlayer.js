@@ -9,7 +9,7 @@ const VideoPlayer = () => {
   const [selectedQuality, setSelectedQuality] = useState("auto");
 
   // HLS kaynağını public klasöründe belirtiyoruz
-  const src = "/hls/liveStream.m3u8";  // HLS dosyasının yolu
+  const src = "/hls/test.m3u8"; // HLS dosyasının yolu
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -48,9 +48,10 @@ const VideoPlayer = () => {
       }
     }
   };
-
+  const kadin = "/kadin.jpg";
   return (
     <div>
+      <img src={kadin} className="h-16 w-16" />
       <video
         ref={videoRef}
         controls
