@@ -32,7 +32,6 @@ jobs:
         run: |
           # Servislerin doğru çalışıp çalışmadığını kontrol et
           sleep 10  # Servislerin başlatılmasını bekle
-          sleep 10
           curl -f http://127.0.0.1:3000 || exit 1  # Next.js servisini kontrol et
 
       - name: Temizleme (Docker Compose Down)
@@ -80,7 +79,6 @@ jobs:
       - name: Servisleri kontrol et
         run: |
           # Docker Compose ile tüm servisleri başlat
-          sleep 10
           curl -f https://hls.sametak.com || exit 1  # Next.js servisini kontrol et
 
       - name: Cleanup (SSH Temizleme)
