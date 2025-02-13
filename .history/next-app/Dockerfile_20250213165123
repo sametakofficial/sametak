@@ -1,0 +1,20 @@
+# Node.js Image'ını temel alıyoruz
+FROM node:latest
+
+# Çalışma dizini olarak /app'yi belirliyoruz
+WORKDIR /app
+
+# Proje dosyalarını container'a kopyalıyoruz
+COPY . .
+
+# Bağımlılıkları yüklüyoruz
+RUN npm install
+
+# Next.js build işlemini yapıyoruz
+RUN npm run build
+
+# 3000 portunu açıyoruz
+EXPOSE 3000
+
+# Next.js server'ı başlatıyoruz
+CMD ["npm", "start"]
