@@ -1,0 +1,25 @@
+FROM node:latest
+
+# Proje dizinini /app olarak belirliyoruz
+WORKDIR /app
+
+# package.json ve package-lock.json dosyalarını kopyala (bağımlılıkları doğru bir şekilde yüklemek için)
+COPY package.json package-lock.json ./
+
+# npm install komutunu çalıştırarak bağımlılıkları yükle
+RUN npm install
+
+# src dizinindeki kodları konteynıra kopyala
+COPY ./src ./src
+
+# Eğer .next dizini veya diğer oluşacak dosyalar varsa, bunları da kopyalayabilirsiniz
+COPY ./.next ./.next
+
+# Build işlemini çalıştır
+RUN npm run build
+
+# Uygulama 3000 portunu dinleyecek
+EXPOSE 3000
+
+# Docker container başlatıldığında `npm start` komutunu çalıştır
+CMD ["npm", "start"]

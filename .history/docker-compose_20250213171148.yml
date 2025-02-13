@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000" # Next.js uygulamasına erişim
     volumes:
-      - ./next-app:/app:delegated # Kodları bind et
+      - ./next-app:/app:delegated  # Kodları bind et
     networks:
       - proxy
     labels:
